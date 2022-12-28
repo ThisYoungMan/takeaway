@@ -1,0 +1,24 @@
+server:
+  port: 8080
+spring:
+  application:
+    # 项目名称，默认就是文件名，可选
+    name: takeaway
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # URL太长换行用 \ 前提是url用双引号
+      url: "jdbc:mysql://localhost:3306/takeaway?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8\
+      &zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true"
+      username: root
+      password: 19980421
+mybatis-plus:
+  configuration:
+    # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    # mybatis日志，可以查看具体的sql语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # 主键策略
+      id-type: ASSIGN_ID
