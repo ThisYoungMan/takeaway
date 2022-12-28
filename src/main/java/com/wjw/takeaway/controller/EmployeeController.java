@@ -1,6 +1,7 @@
 package com.wjw.takeaway.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.wjw.takeaway.common.R;
 import com.wjw.takeaway.entity.Employee;
 import com.wjw.takeaway.service.EmployeeService;
@@ -31,7 +32,7 @@ public class EmployeeController {
     /**
      * 员工登录
      *
-     * @param request Http请求
+     * @param request  Http请求
      * @param employee 员工对象
      * @return R
      */
@@ -81,5 +82,30 @@ public class EmployeeController {
     public R<String> logout(HttpServletRequest request) {
         request.getSession().removeAttribute("emp_id");
         return R.success("退出成功");
+    }
+
+    /**
+     * 新增员工方法
+     *
+     * @param request  Http请求
+     * @param employee
+     * @return
+     */
+    @PostMapping
+    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("新增员工方法，员工信息={}", employee.toString());
+
+        // 设置初始密码123456，md5加密
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+
+        // 获取当前登录账号ID
+        Long emp_id = (Long) request.getSession().getAttribute("emp_id");
+        employee.setCreateUser(emp_id);
+
+        // 账号重复添加会有异常，try catch 不是好的解决办法，采用统一异常处理
+        employeeService.save(employee);
+
+        return R.success("新增员工成功");
+
     }
 }
